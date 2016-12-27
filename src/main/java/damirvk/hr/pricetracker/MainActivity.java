@@ -13,6 +13,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -22,12 +25,27 @@ import damirvk.hr.pricetracker.db.DatabaseHandler;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText etURLEnter;
+    Button saveButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        etURLEnter  = (EditText) findViewById(R.id.et_car_url);
+        saveButton = (Button) findViewById(R.id.bt_save);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str = etURLEnter.getText().toString();
+                Toast msg = Toast.makeText(getBaseContext(),str,Toast.LENGTH_LONG);
+                msg.show();
+            }
+        });
 
         initDb();
 
