@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import damirvk.hr.pricetracker.db.CarEntry;
 import damirvk.hr.pricetracker.db.DatabaseHandler;
+import damirvk.hr.pricetracker.parsing.ChangedData;
 import damirvk.hr.pricetracker.parsing.URLFinder;
 import damirvk.hr.pricetracker.parsing.URLFinderAsync;
 
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     EditText etURLEnter;
-    Button saveButton;
+    Button saveButton, checkChangesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        etURLEnter  = (EditText) findViewById(R.id.et_car_url);
+        etURLEnter = (EditText) findViewById(R.id.et_car_url);
         saveButton = (Button) findViewById(R.id.bt_save);
+        checkChangesButton = (Button) findViewById(R.id.bt_check_changes);
         DatabaseHandler db = new DatabaseHandler(this);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +65,26 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        checkChangesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<CarEntry> allEntries = db.getAllEntries();
+                ChangedData changedData = new ChangedData(allEntries);
+                if (changedData.getPriceDropped().isEmpty()) {
+                    Toast.makeText(getBaseContext(), "No price changes!", Toast.LENGTH_LONG).show();
+                } else {
+                    for (CarEntry entry : changedData.getPriceDropped()) {
+                        Toast.makeText(getBaseContext(), "Price changed: " + entry.getUrl(), Toast.LENGTH_LONG).show();
+                    }
+                }
+                if (!changedData.getSoldCars().isEmpty()) {
+                    for (CarEntry ce : changedData.getSoldCars()) {
+                        Toast.makeText(getBaseContext(), "Car sold: " + ce.getShortTitle(), Toast.LENGTH_LONG).show();
+                    }
+                }
 
+            }
+        });
         //initDb();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,7 +105,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
 
 
     @Override

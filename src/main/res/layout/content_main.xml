@@ -12,11 +12,6 @@
     tools:context="damirvk.hr.pricetracker.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bla" />
-
     <EditText
         android:id="@+id/et_car_url"
         android:layout_width="fill_parent"
@@ -33,5 +28,15 @@
         android:layout_below="@+id/et_car_url"
         android:layout_alignRight="@+id/et_car_url"
         android:layout_alignEnd="@+id/et_car_url" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check changes"
+        android:id="@+id/bt_check_changes"
+        android:layout_below="@+id/bt_save"
+        android:layout_alignRight="@+id/bt_save"
+        android:layout_alignEnd="@+id/bt_save" />
 
 </RelativeLayout>
