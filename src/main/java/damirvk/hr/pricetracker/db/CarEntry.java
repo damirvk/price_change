@@ -6,17 +6,19 @@ package damirvk.hr.pricetracker.db;
 public class CarEntry {
 
     private int iid;
-    private String url = "url";
-    private String start_price = "start_price";
-    private String currentPrice = "current_price";
+    private String url;
+    private String start_price;
+    private String currentPrice;
+    private String shortTitle;
 
     public CarEntry() {
     }
 
-    public CarEntry(String url, String start_price, String currentPrice) {
+    public CarEntry(String url, String start_price, String currentPrice, String shortTitle) {
         this.url = url;
         this.start_price = start_price;
         this.currentPrice = currentPrice;
+        this.shortTitle = shortTitle;
     }
 
     public int getIid() {
@@ -49,6 +51,14 @@ public class CarEntry {
 
     public void setCurrentPrice(String currentPrice) {
         this.currentPrice = currentPrice;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
     }
 
     @Override

@@ -18,9 +18,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import damirvk.hr.pricetracker.db.CarEntry;
 import damirvk.hr.pricetracker.db.DatabaseHandler;
+import damirvk.hr.pricetracker.parsing.URLFinder;
+import damirvk.hr.pricetracker.parsing.URLFinderAsync;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,17 +40,31 @@ public class MainActivity extends AppCompatActivity
 
         etURLEnter  = (EditText) findViewById(R.id.et_car_url);
         saveButton = (Button) findViewById(R.id.bt_save);
+        DatabaseHandler db = new DatabaseHandler(this);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String str = etURLEnter.getText().toString();
-                Toast msg = Toast.makeText(getBaseContext(),str,Toast.LENGTH_LONG);
+                String newUrl = etURLEnter.getText().toString();
+                int idStart = newUrl.indexOf("id=") + 3;
+                String carId = newUrl.substring(idStart, idStart + 9);
+                Log.d("CarId", carId);
+                CarEntry carEntry = null;
+                try {
+                    carEntry = new URLFinderAsync().execute(carId).get();
+                    db.addCarEntry(carEntry);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                Toast msg = Toast.makeText(getBaseContext(), carEntry.getCurrentPrice(), Toast.LENGTH_LONG);
                 msg.show();
             }
         });
 
-        initDb();
+
+        //initDb();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,26 +85,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initDb() {
-        DatabaseHandler db = new DatabaseHandler(this);
 
-        /**
-         * CRUD Operations
-         * */
-        // Inserting Contacts
-        Log.d("Insert: ", "Inserting ..");
-        db.addCarEntry(new CarEntry("http://bla.com","13","23"));
-
-        // Reading all carEntry
-        Log.d("Reading: ", "Reading all carEntry..");
-        List<CarEntry> carEntry = db.getAllEntries();
-
-        for (CarEntry entry : carEntry) {
-            String log = "Id: " + entry.getIid() + " ,URL: " + entry.getUrl() + " ,Start: " + entry.getStart_price() + "Current" + entry.getCurrentPrice();
-            // Writing Contacts to log
-            Log.d("Name: ", log);
-        }
-    }
 
     @Override
     public void onBackPressed() {

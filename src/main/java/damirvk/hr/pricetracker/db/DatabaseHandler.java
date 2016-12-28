@@ -15,7 +15,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "mobile_de";
@@ -28,6 +28,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_URL = "url";
     private static final String KEY_START_PRICE = "start_price";
     private static final String KEY_CURRENT_PRICE = "current_price";
+    private static final String KEY_SHORT_TITLE = "short_title";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,7 +40,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_ENTRIES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_URL + " TEXT,"
-                + KEY_START_PRICE + " TEXT," + KEY_CURRENT_PRICE + " TEXT" +")";
+                + KEY_START_PRICE + " TEXT," + KEY_CURRENT_PRICE + " TEXT," + KEY_SHORT_TITLE + " TEXT" +")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -59,6 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_URL, carEntry.getUrl());
         values.put(KEY_START_PRICE, carEntry.getStart_price());
         values.put(KEY_CURRENT_PRICE, carEntry.getCurrentPrice());
+        values.put(KEY_SHORT_TITLE, carEntry.getShortTitle());
 
         // Inserting Row
         db.insert(TABLE_ENTRIES, null, values);
@@ -81,6 +84,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 entry.setUrl(cursor.getString(1));
                 entry.setStart_price(cursor.getString(2));
                 entry.setCurrentPrice(cursor.getString(3));
+                entry.setShortTitle(cursor.getString(4));
                 // Adding contact to list
                 etryList.add(entry);
             } while (cursor.moveToNext());
@@ -97,6 +101,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_URL, carEntry.getUrl());
         values.put(KEY_START_PRICE, carEntry.getStart_price());
         values.put(KEY_CURRENT_PRICE, carEntry.getCurrentPrice());
+        values.put(KEY_SHORT_TITLE, carEntry.getShortTitle());
         // updating row
         return db.update(TABLE_ENTRIES, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(carEntry.getIid()) });
